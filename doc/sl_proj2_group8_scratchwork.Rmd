@@ -1,0 +1,23 @@
+---
+title: "sl_group8_proj2"
+author: "lisixuan"
+date: "2019/9/29"
+output: html_document
+---
+
+```{r}
+library(shiny)
+ui<-fluidPage(
+  
+)
+
+```
+
+```{r}
+server<-function(input,output){}
+
+```
+
+```{r}
+shinyApp(server = server,ui = ui)
+```
