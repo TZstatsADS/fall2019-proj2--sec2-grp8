@@ -1,10 +1,23 @@
 ---
 title: "sl_group8_proj2"
 author: "lisixuan"
-date: "2019Äê9ÔÂ29ÈÕ"
+date: "2019/9/29"
 output: html_document
 ---
 
 ```{r}
-knitr::opts_chunk$set(echo = TRUE)
+library(shiny)
+ui<-fluidPage(
+  
+)
+
+```
+
+```{r}
+server<-function(input,output){}
+
+```
+
+```{r}
+shinyApp(server = server,ui = ui)
 ```
