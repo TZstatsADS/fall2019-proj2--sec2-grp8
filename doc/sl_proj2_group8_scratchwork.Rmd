@@ -1,0 +1,10 @@
+---
+title: "sl_group8_proj2"
+author: "lisixuan"
+date: "2019Äê9ÔÂ29ÈÕ"
+output: html_document
+---
+
+```{r}
+knitr::opts_chunk$set(echo = TRUE)
+```
