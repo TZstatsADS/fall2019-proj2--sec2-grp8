@@ -1,7 +1,0 @@
----
-title: "Data_prcocessing"
-author: "Dingyi Fang"
-date: "10/1/2019"
-output: html_document
----
-
