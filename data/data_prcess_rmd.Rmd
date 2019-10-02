@@ -45,6 +45,8 @@ for (i in c("Adult","Adults","All Ages","A parent 16 Years Old or Older ","Senio
 }
 acitivities[acitivities$Grade.Level...Age.Group=="MS/HS",]$Grade.Level...Age.Group = "Middle School"
 summary(acitivities$Grade.Level...Age.Group)
-acitivities[3,]$Grade.Level...Age.Group
+acitivities$Grade.Level...Age.Group = factor(acitivities$Grade.Level...Age.Group)
+
+write.csv(acitivities,file = "/Users/jacob/desktop/activities_processed.csv")
 ```
 
