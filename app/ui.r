@@ -120,10 +120,11 @@ shinyUI(
                           div(width = 12,
                               h1("The Data Summary of Crime Data"), # title for data tab
                               br(),
-                              dataTableOutput('table'),
+                              dataTableOutput('table1'),
                               
                               h1("The Data Summary of Activities Data"), # title for data tab
-                              br()
+                              br(),
+                              dataTableOutput('table2')
                           ),
                           # footer
                           div(class="footer", em(a("Data origniated from NYC Open Data",href="https://opendata.cityofnewyork.us")))
