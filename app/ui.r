@@ -60,12 +60,15 @@ shinyUI(
                               leafletOutput("map",width="100%",height=700),
                               
                               
-                              absolutePanel(id = "controls", class = "panel panel-default", fixed = TRUE, draggable = TRUE,
+                              absolutePanel(id = "control", class = "panel panel-default", fixed = TRUE, draggable = TRUE,
                                             top = 120, left = 20, right = "auto", bottom = "auto", width = 250, height = "auto",
-                                            h3("xxxxxxxx"),
-                                            checkboxGroupInput("enable_markers", "Children Grades:",
+                                            h3("Select the Grade Level for Activities"),
+                                            checkboxGroupInput("enable_markers", "Children Grades for Activities Search:",
                                                                choices = c("Elementray School","Middle School","High School"),
                                                                selected = c("Elementray School","Middle School","High School")),
+                                            checkboxGroupInput("enable_markers", "Children Grades for School Search:",
+                                                               choices = c("K-8","Elementray School","Middle School","High School"),
+                                                               selected = c("K-8","Elementray School","Middle School","High School")),
                                             sliderInput("click_radius", "Radius of area around  the selected address", min=100, max=1000, value=100, step=5),
                                             checkboxInput("click_multi", "Compare among multiple locations",value = F),
                                             actionButton("clear_circles", "Clear all circles")
@@ -90,11 +93,11 @@ shinyUI(
                               
                               absolutePanel(id = "controls", class = "panel panel-default", fixed = TRUE, draggable = TRUE,
                                             top=120, left=270, right='auto', bottom="auto", width=200, height="auto",
-                                            #checkboxGroupInput("click_violence_type", "Violence Types",
-                                            #                   choices = complaint$type, selected = complaint$type),
-                                            actionButton("click_all_complaint_types", "Select ALL"),
-                                            actionButton("click_none_complaint_types", "Select NONE"),
-                                            checkboxInput("click_enable_hours", "Seperate hours",value = F)
+                                            checkboxGroupInput("click_violence_type", "Violence Types",
+                                                              choices =c("Violation","Misdemeanor", "Felony"), selected =c("Violation","Misdemeanor", "Felony")),
+                                            actionButton("click_all_crime_types", "Select ALL"),
+                                            actionButton("click_none_crime_types", "Select NONE")
+                                            #checkboxInput("click_enable_hours", "Seperate hours",value = F)
                                             #uiOutput("click_hours")
                               )
                               
@@ -107,20 +110,20 @@ shinyUI(
                           
                           wellPanel(style = "overflow-y:scroll; height: 850px; max-height: 750px; background-color: #ffffff;",
                                     tabsetPanel(type="tabs",
-                                                tabPanel(title="Stat1",
-                                                         br(),
-                                                         div(plotlyOutput("stat_plot_ts"), align="center")
+                                                tabPanel(title="School in Danger Zone",
+                                                         br()
+                                                         #div(plotlyOutput("stat_plot_ts"), align="center")
                                                 ),
-                                                tabPanel(title="Stat2",
+                                                tabPanel(title="Crime Rate By 24 Hours",
                                                          br(),
                                                          div(plotlyOutput("stat_plot_ts2"), align="center")
                                                          #div(img(src="img/stat_time_distribution.png", width=800), align="center")
                                                 ),
-                                                tabPanel(title="Stat3",
+                                                tabPanel(title="Children Activities Spots in Danger Zone",
                                                          br()
                                                          #div(img(src="img/stat_plot_heatmap.png", width="90%"), align="center" )
                                                 ),
-                                                tabPanel(title="Stat4",
+                                                tabPanel(title="The Pie Chart Sumnmary of the Crime",
                                                          br(),
                                                          div(htmlOutput("crime_type"), align="center"),
                                                          

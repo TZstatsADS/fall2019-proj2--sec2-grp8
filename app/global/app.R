@@ -52,14 +52,37 @@ crime_race_count <- gvisPieChart(crime_race,options=list(
   pieHole=0.4, chartid="doughnut"))
 
 
-#names(hour_crime_df)<-c("Time","Amount")
-crime_tm <- as.POSIXct(crime$CMPLNT_FR_TM,format="%H:%M:%OS")
-crime_tm_hour <- cut(crime_tm,breaks="hour")
-hour_crime_df <- data.frame(table(crime_tm_hour))
-hour_crime_df <- mutate(hour_crime_df,crime_tm_hour=substr(crime_tm_hour, 12,19))
+violation_crime <- crime[crime$LAW_CAT_CD =="VIOLATION",]
+misdemeanor_crime <- crime[crime$LAW_CAT_CD =="MISDEMEANOR",]
+felony_crime <- crime[crime$LAW_CAT_CD =="FELONY",]
 
-plot2 <- plot_ly(data.frame(hour_crime_df), x = hour_crime_df$crime_tm_hour)%>%
-  add_lines(y = hour_crime_df$Freq) %>%
+#names(hour_crime_df)<-c("Time","Amount")
+violation_crime_tm <- as.POSIXct(violation_crime$CMPLNT_FR_TM,format="%H:%M:%OS")
+misdemeanor_crime_tm <- as.POSIXct(misdemeanor_crime$CMPLNT_FR_TM,format="%H:%M:%OS")
+felony_crime_tm <- as.POSIXct(felony_crime$CMPLNT_FR_TM,format="%H:%M:%OS")
+violation_crime_tm_hour <- cut(violation_crime_tm,breaks="hour")
+misdemeanor_crime_tm_hour <- cut(misdemeanor_crime_tm,breaks="hour")
+felony_crime_tm_hour <- cut(felony_crime_tm,breaks="hour")
+
+violation_hour_crime_df <- data.frame(table(violation_crime_tm_hour))
+violation_hour_crime_df <- mutate(violation_hour_crime_df,violation_crime_tm_hour=substr(violation_crime_tm_hour, 12,19))
+misdemeanor_hour_crime_df <- data.frame(table(misdemeanor_crime_tm_hour))
+misdemeanor_hour_crime_df <- mutate(misdemeanor_hour_crime_df,misdemeanor_crime_tm_hour=substr(misdemeanor_crime_tm_hour, 12,19))
+felony_hour_crime_df <- data.frame(table(felony_crime_tm_hour))
+felony_hour_crime_df <- mutate(felony_hour_crime_df,felony_crime_tm_hour=substr(felony_crime_tm_hour, 12,19))
+
+hour_count_summary <- cbind(violation_hour_crime_df,misdemeanor_hour_crime_df,felony_hour_crime_df)
+hour_count_summary  <- hour_count_summary[,c(1,2,4,6)]
+
+names(hour_count_summary)[names(hour_count_summary) == "violation_crime_tm_hour"] <- "Hour"
+names(hour_count_summary)[names(hour_count_summary) == "Freq"] <- "Violation_Freq"
+names(hour_count_summary)[names(hour_count_summary) == "Freq.1"] <- "Misdemeanor_Freq"
+names(hour_count_summary)[names(hour_count_summary) == "Freq.2"] <- "Felony_Freq"
+
+plot2 <- plot_ly(data.frame(hour_count_summary), x = hour_count_summary$Hour)%>%
+  add_lines(y = hour_count_summary$Violation_Freq, name = 'Violation') %>%
+  add_lines(y = hour_count_summary$Misdemeanor_Freq, name = 'Misdemeanor') %>%
+  add_lines(y = hour_count_summary$Felony_Freq, name = 'Felony') %>%
   layout(
     title = "The Number of Crimes by 24 hours ",
     xaxis = list(title="Time",
