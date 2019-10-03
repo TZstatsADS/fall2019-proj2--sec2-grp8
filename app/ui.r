@@ -108,11 +108,12 @@ shinyUI(
                           wellPanel(style = "overflow-y:scroll; height: 850px; max-height: 750px; background-color: #ffffff;",
                                     tabsetPanel(type="tabs",
                                                 tabPanel(title="Stat1",
-                                                         br()
-                                                         #div(plotlyOutput("stat_plot_ts"), align="center")
+                                                         br(),
+                                                         div(plotlyOutput("stat_plot_ts"), align="center")
                                                 ),
                                                 tabPanel(title="Stat2",
-                                                         br()
+                                                         br(),
+                                                         div(plotlyOutput("stat_plot_ts2"), align="center")
                                                          #div(img(src="img/stat_time_distribution.png", width=800), align="center")
                                                 ),
                                                 tabPanel(title="Stat3",

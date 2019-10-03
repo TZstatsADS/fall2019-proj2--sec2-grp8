@@ -14,7 +14,8 @@ shinyServer(function(input, output,session) {
   
   ## Statistics Part
   
-  #output$stat_plot_ts <- renderPlotly(stat_plots[['ts']])
+  output$stat_plot_ts <- renderPlotly(plot1)
+  output$stat_plot_ts2 <- renderPlotly(plot2)
   output$crime_type <- renderGvis(crime_type_count)
   
   output$crime_sex <- renderGvis(crime_sex_count)
