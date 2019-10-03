@@ -2,7 +2,7 @@ library(shiny)
 library(leaflet)
 library(data.table)
 library(plotly)
-library(shinyWidgets)
+
 
 shinyUI(
   div(id="canvas",
@@ -57,7 +57,7 @@ shinyUI(
                  
                  tabPanel("Map",
                           div(class="outer",
-                              leafletOutput("map", width="100%", height="100%"),
+                              leafletOutput("map",width="100%",height=700),
                               
                               
                               absolutePanel(id = "controls", class = "panel panel-default", fixed = TRUE, draggable = TRUE,
@@ -120,8 +120,13 @@ shinyUI(
                                                          #div(img(src="img/stat_plot_heatmap.png", width="90%"), align="center" )
                                                 ),
                                                 tabPanel(title="Stat4",
-                                                         br()
-                                                         #div(htmlOutput("stat_plot_doughnut"), align="center")
+                                                         br(),
+                                                         div(htmlOutput("crime_type"), align="center"),
+                                                         
+                                                         div(htmlOutput("crime_sex"), align="center"),
+                                                         
+                                                         div(htmlOutput("crime_race"), align="center")
+                                                    
                                                 )
                                     )
                           )
