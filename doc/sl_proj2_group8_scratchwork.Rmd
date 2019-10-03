@@ -8,10 +8,19 @@ output: html_document
 ```{r}
 library(shiny)
 ui<-fluidPage(
+  titlePanel('Group 8 proj 2'),
+  checkboxInput(inputId = 'datafrom brooklyn',label ='Brooklyn',value = FALSE),
+  checkboxInput(inputId = 'datafrom bronx',label = 'Bronx',FALSE),
+  plotOutput("hist")
+  
+
   
 )
 
 ```
+
+
+
 
 ```{r}
 server<-function(input,output){}
