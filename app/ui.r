@@ -3,49 +3,61 @@ library(leaflet)
 library(data.table)
 library(plotly)
 
+
 shinyUI(
   div(id="canvas",
       
-      navbarPage(strong("Are we safe in daily activities?",style="color: white;"), theme="styles.css",
+      navbarPage(strong("Are Children Living in Danger?",style="color: black;"), theme="styles.css",
+                 
                  tabPanel("Intro",
+                        
                           mainPanel(width=12,
-                                    h1("Are Children safe during their afdter-school activities?-  A shiny app projrct driven by NYC open data"),
-                                    h2("News1"),
-                                    p("Are Children safe during their afdter-school activities?-  
-                                      A shiny app projrct driven by NYC open dataAre Children safe during their afdter-school activities?-
-                                      A shiny app projrct driven by NYC open dataAre Children safe during their afdter-school activities?-  
-                                      A shiny app projrct driven by NYC open data"),
-                                    h2("News2"),
-                                    p("Are Children safe during their afdter-school activities?-  
-                                      A shiny app projrct driven by NYC open dataAre Children safe during their afdter-school activities?-
-                                      A shiny app projrct driven by NYC open dataAre Children safe during their afdter-school activities?-  
-                                      A shiny app projrct driven by NYC open data"),
+                                    
+                                    h1("Are Children Safe During Their School and Afdter-school Activities?"),
+                                    h3("News 1:"),
+                                    h3("Dulce Maria Alavez, A 5-Year-Old Girl Went Missing From a Playground in New Jersey"),
+                                    p("According to the New York Times, in BRIDGETON, N.J.-Dulce went missing on the afternoon of Sept. 
+                                      16 after her mother,Noema Alavez Perez, took her, her 3-year-old brother and her 8-year-old cousin 
+                                      to get ice cream at a neighborhood convenience store.Dulce disappeared while Ms. Alavez Perez sat 
+                                      in the car with the 8-year-old, roughly 30 yards away. The mother is still desperately seeking 
+                                      for information about her daughtertwo weeks after the girl is believed to have been abducted from a local park."),
+                                     
+                                    h3("News 2:"),
+                                    h3("Boy who was sucker-punched at Moreno Valley school dies from injuries"),
+                                    p("According to LA Times, Diego, a boy who was critically injured last week after being sucker-punched at school 
+                                      in an assault captured on video died Tuesday night.A video posted to Facebook shows a boy punching Diego, who is 
+                                      then struck by a third person standing out of frame. Diego appears to hit his head on a concrete pillar as he falls 
+                                      to the ground. The assailant who threw the first punch strikes the boy again before running away. He died after sending 
+                                      to the hospital in a extremely critical condition.
+                                      "),
+                                    
+                                    
                                     h2("Our Motivation"),
-                                    p("Are Children safe during their afdter-school activities?-  
-                                      A shiny app projrct driven by NYC open dataAre Children safe during their afdter-school activities?-
-                                      A shiny app projrct driven by NYC open dataAre Children safe during their afdter-school activities?-  
-                                      A shiny app projrct driven by NYC open data"),
-                                    h2("Project content"),
-                                    p("A shiny app projrct driven by NYC open dataAre Children safe during their afdter-school activities?"),
+                                    p("Devloping an App that relates the crimes whose victims are kids or teenages with places where 
+                                        children spend the most, for instance schools and after-school activities spots.Inspired by how the Amber 
+                                        Alarm works, We want to develop a visualization and give children warnings of certain areas even before 
+                                        they are in danger.
+                                        "),
+                                    h2("Project contents"),
+                                    p("The projects decomposes into several sections that help children and their parents to get a sense of if children are in potential danger."),
                                     br(),
-                                    p("   - ",strong("Section 1"), ": presents 3 visualizations of"),
-                                    p("   - ",strong("Section 2"),": enables users to pinpoint any location in" ),
-                                    p("   - ",strong("Section 3"),": enables users to pinpoint any location in" ),
+                                      p("   - ",strong("Map Visualization"), ": xxxxx"),
+                                    p("   - ",strong("Statistics Anlysis"),": xxx" ),
+                                    p("   - ",strong("Database Search"),": A page designed for searching particular crime data, school and after-school activities information that interest the users. Users
+                                      can serach for keywords and get basic written records of the data analyzed in the previous sections." ),
+                                    
                                     h2("Techical Terms Explaination in this app"),
                                     p("Danger Index:"),
                                     p(),
-                                    h2("Our Goals"),
-                                    p("Are Children safe during their afdter-school activities?-  
-                                      A shiny app projrct driven by NYC open dataAre Children safe during their afdter-school activities?-
-                                      A shiny app projrct driven by NYC open dataAre Children safe during their afdter-school activities?-"),
-                                    p(em(a("Github link",href="https://github.com/TZstatsADS/Fall2016-Proj2-grp8")))
+                                  
+                                    p(em(a("Github link",href="https://github.com/TZstatsADS/fall2019-proj2--sec2-grp8")))
                                     ),
                           div(class="footer", "Group Project by xxx xxx xxx")
                                     ),
                  
                  tabPanel("Map",
                           div(class="outer",
-                              leafletOutput("map", width="100%", height="100%"),
+                              leafletOutput("map",width="100%",height=700),
                               
                               
                               absolutePanel(id = "controls", class = "panel panel-default", fixed = TRUE, draggable = TRUE,
@@ -96,11 +108,12 @@ shinyUI(
                           wellPanel(style = "overflow-y:scroll; height: 850px; max-height: 750px; background-color: #ffffff;",
                                     tabsetPanel(type="tabs",
                                                 tabPanel(title="Stat1",
-                                                         br()
-                                                         #div(plotlyOutput("stat_plot_ts"), align="center")
+                                                         br(),
+                                                         div(plotlyOutput("stat_plot_ts"), align="center")
                                                 ),
                                                 tabPanel(title="Stat2",
-                                                         br()
+                                                         br(),
+                                                         div(plotlyOutput("stat_plot_ts2"), align="center")
                                                          #div(img(src="img/stat_time_distribution.png", width=800), align="center")
                                                 ),
                                                 tabPanel(title="Stat3",
@@ -108,8 +121,13 @@ shinyUI(
                                                          #div(img(src="img/stat_plot_heatmap.png", width="90%"), align="center" )
                                                 ),
                                                 tabPanel(title="Stat4",
-                                                         br()
-                                                         #div(htmlOutput("stat_plot_doughnut"), align="center")
+                                                         br(),
+                                                         div(htmlOutput("crime_type"), align="center"),
+                                                         
+                                                         div(htmlOutput("crime_sex"), align="center"),
+                                                         
+                                                         div(htmlOutput("crime_race"), align="center")
+                                                    
                                                 )
                                     )
                           )
