@@ -1,0 +1,12 @@
+name: Project
+title: Project
+username:
+account: adsproject2group8
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 1271573
+bundleId: 2463680
+url: https://adsproject2group8.shinyapps.io/Project/
+when: 1570052491.6266
+asMultiple: FALSE
+asStatic: FALSE

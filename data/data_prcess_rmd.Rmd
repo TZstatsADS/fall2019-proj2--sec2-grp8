@@ -1,0 +1,52 @@
+---
+title: "Data_prcocessing"
+author: "Dingyi Fang"
+date: "10/1/2019"
+output: html_document
+---
+
+```{r}
+acitivities <- read.csv("updated_activities.csv")
+unique(acitivities$BOROUGH...COMMUNITY)
+#process jackson heights to queens
+acitivities[acitivities$BOROUGH...COMMUNITY == "Jackson Heights",]$BOROUGH...COMMUNITY = "Queens"
+unique(acitivities$BOROUGH...COMMUNITY)
+#process Jamaica
+acitivities[acitivities$BOROUGH...COMMUNITY == "Jamaica",]$BOROUGH...COMMUNITY = "Queens"
+```
+
+```{r}
+unique(acitivities$BOROUGH...COMMUNITY)
+acitivities[acitivities$BOROUGH...COMMUNITY == "Kew Gardens",]$BOROUGH...COMMUNITY = "Queens"
+acitivities[acitivities$BOROUGH...COMMUNITY == "Flushing",]$BOROUGH...COMMUNITY = "Queens"
+acitivities[acitivities$BOROUGH...COMMUNITY == "Long Island City",]$BOROUGH...COMMUNITY = "Queens"
+acitivities[acitivities$BOROUGH...COMMUNITY == "Corona",]$BOROUGH...COMMUNITY = "Queens"
+acitivities[acitivities$BOROUGH...COMMUNITY == "Astoria",]$BOROUGH...COMMUNITY = "Queens"
+acitivities[acitivities$BOROUGH...COMMUNITY == "Forest Hills",]$BOROUGH...COMMUNITY = "Queens"
+acitivities[acitivities$BOROUGH...COMMUNITY == "Brookyn",]$BOROUGH...COMMUNITY = "Queens"
+acitivities[acitivities$BOROUGH...COMMUNITY == "New York ",]$BOROUGH...COMMUNITY = "New York"
+unique(acitivities$BOROUGH...COMMUNITY)
+```
+
+```{r}
+unique(acitivities$Grade.Level...Age.Group)
+for (i in c("14 to 24", "16 to 24","16+","18+","16 to 21", "13 to 21","18+")) 
+  {
+  acitivities[acitivities$Grade.Level...Age.Group==i,]$Grade.Level...Age.Group = "High School"
+}
+
+acitivities[acitivities$Grade.Level...Age.Group==" High School",]$Grade.Level...Age.Group = "High School"
+
+for (i in c("ESOL/Civics","6 and up","Elem/MS/HS","grades 6 to 8")) {
+   acitivities[acitivities$Grade.Level...Age.Group==i,]$Grade.Level...Age.Group = "Elementary"
+}
+for (i in c("Adult","Adults","All Ages","A parent 16 Years Old or Older ","Seniors","11+","14-Nov","20-Ma")) {
+  acitivities[acitivities$Grade.Level...Age.Group==i,]$Grade.Level...Age.Group = "Adult"
+}
+acitivities[acitivities$Grade.Level...Age.Group=="MS/HS",]$Grade.Level...Age.Group = "Middle School"
+summary(acitivities$Grade.Level...Age.Group)
+acitivities$Grade.Level...Age.Group = factor(acitivities$Grade.Level...Age.Group)
+
+write.csv(acitivities,file = "/Users/jacob/desktop/activities_processed.csv")
+```
+
