@@ -15,7 +15,7 @@ register_google(key = "AIzaSyAXxi_jjBKmoortYOFU1WeenatppEgJgdc")
 
 #activities <- read.csv("activities_processed.csv")
 
-#crime_data <- read.csv("teen_data.csv")
+#crime <- read.csv("teen_data.csv")
 
 kid_activity <- activities[activities$Grade.Level...Age.Group == "Elementary",]
 middle_activity <- activities[activities$Grade.Level...Age.Group == "Middle School",]
