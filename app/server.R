@@ -6,6 +6,7 @@ library(shinyWidgets)
 library(googleVis)
 library(geosphere)
 library(leaflet.extras)
+library(shinythemes)
 
 setwd("/Users/jacob/Desktop/FALL 2019/Applied Data Science/fall2019-proj2--sec2-grp8/data")
 
@@ -68,8 +69,8 @@ shinyServer(function(input, output,session) {
   })
   
   #enable/disable markers of specific group
-  observeEvent(input$enable_markers, {
-    if("Elementray School" %in% input$enable_markers) leafletProxy("map") %>% showGroup("kid_activity")
+ observeEvent(input$enable_markers, {
+    if("Elementary School" %in% input$enable_markers) leafletProxy("map") %>% showGroup("kid_activity")
     else{leafletProxy("map") %>% hideGroup("kid_activity")}
     if("Middle School" %in% input$enable_markers) leafletProxy("map") %>% showGroup("middle_activity")
     else{leafletProxy("map") %>% hideGroup("middle_activity")}
@@ -78,7 +79,7 @@ shinyServer(function(input, output,session) {
   }, ignoreNULL = FALSE)
   
 ## show the crime data around the location along with popups
-  observeEvent(input$map_click, {
+observeEvent(input$map_click, {
     if(!input$click_multi)leafletProxy("map") %>% clearGroup(c("circles","centroids",paste(crime_data$LAW_CAT_CD, rep(1:24, each = 7))))
     click <- input$map_click
     clat <- click$lat
@@ -95,8 +96,8 @@ shinyServer(function(input, output,session) {
     crimes_total <- nrow(crimes_within_range)
     crimes_per_day <- crimes_total / 365
     crimes_per_day_area <- crimes_per_day / (radius/100)^2
-    #danger index
     
+    #danger index
     output$click_crimes_total <- renderText(crimes_total)
     output$click_crimes_per_day <- renderText(round(crimes_per_day,2))
     output$click_crimes_per_day_area <- renderText(round(crimes_per_day_area, 2))
