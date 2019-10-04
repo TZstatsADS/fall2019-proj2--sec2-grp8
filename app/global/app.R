@@ -93,4 +93,13 @@ plot2 <- plot_ly(data.frame(hour_count_summary), x = hour_count_summary$Hour)%>%
   )
 
 
+crimes_within <- function(r,long,lat){return(crime[distCosine(c(long,lat),crime[,c("Longitude","Latitude")])<=r,])} 
+### pallette for circle fill color #6666cc  #3333cc
 
+for (i  in 1:nrow(crime)){
+  if(crime$LAW_CAT_CD[i]=="VIOLATION") crime$X[i]="yellow"
+  if(crime$LAW_CAT_CD[i]=="MISDEMEANOR") crime$X[i]="orange"
+  if(crime$LAW_CAT_CD[i]=="FELONY") crime$X[i]="red"
+}
+
+names(crime)[names(crime) == "X"] <- "color"
