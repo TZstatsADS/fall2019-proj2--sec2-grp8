@@ -1,28 +1,126 @@
 library(shiny)
 library(leaflet)
-<<<<<<< HEAD
 library(data.table)
 library(plotly)
 library(shinyWidgets)
+library(googleVis)
+library(geosphere)
+library(leaflet.extras)
+library(shinythemes)
+library(ggmap)
 
-shinyServer(function(input, output) {
-              output$map <- renderLeaflet({
-                              leaflet() %>%
-                              addProviderTiles(providers$Stamen.TonerLite,
-                              options = providerTileOptions(noWrap = TRUE))  %>% 
-                              setView(-73.983,40.7639,zoom = 10) })
-=======
+#Get the Google API
+register_google(key = "AIzaSyAXxi_jjBKmoortYOFU1WeenatppEgJgdc")
+activities <- read.csv("activities_processed.csv")
+crime <- read.csv("teen_data.csv")
 
-shinyServer(function(input, output,session) {
+kid_activity <- activities[activities$Grade.Level...Age.Group == "Elementary",]
+middle_activity <- activities[activities$Grade.Level...Age.Group == "Middle School",]
+high_activity <- activities[activities$Grade.Level...Age.Group == "High School",]
+
+marker_opt <- markerOptions(opacity = 0.7, riseOnHover = TRUE)
+
+#crimes_within <- function(r,long,lat){return(crime_data[distCosine(c(long,lat),crime_data[,c("Longitude","Latitude")])<=r,])} 
+### pallette for circle fill color #6666cc  #3333cc
+pal <- colorNumeric("#666699",c(0,1), na.color = "#808080" )
+
+ shinyServer(function(input, output,session) {
   
   ## Map Tab section
+  
   output$map <- renderLeaflet({
-    #marker_opt <- markerOptions(opacity=0.8,riseOnHover=T)
-    #m <- leaflet() %>%  addProviderTiles("Stamen.TonerLite") %>% setView(-73.983,40.7639,zoom = 13)
-    leaflet() %>%
-      addProviderTiles(providers$Stamen.TonerLite,options = providerTileOptions(noWrap = TRUE)) %>% setView(-73.983,40.7639,zoom = 13)
-                        
+    m <- leaflet() %>%
+      addProviderTiles("CartoDB.Positron", 
+                       options = providerTileOptions(noWrap = TRUE)) %>%
+                        setView(-73.9463,40.6641,zoom = 12) %>%
+                        addResetMapButton()
+            
+    #plot kids activities
+    leafletProxy("map", data = kid_activity) %>%
+      addMarkers(~Longitude, ~Latitude,
+                 group = "kid_activity" ,
+                 options = marker_opt, popup = ~ paste0("<b>",SITE.NAME,"</b>",
+                                                          "<br/>", "Phone: ", Contact.Number,
+                                                          "<br/>", "Address: ", Location.1, 
+                                                           " ",Postcode) ,
+                 label = ~ SITE.NAME ,
+                 icon = list(iconUrl = 'https://cdn2.vectorstock.com/i/1000x1000/47/76/kids-icon-happy-boy-and-girl-children-silhouettes-vector-9674776.jpg'
+                             ,iconSize = c(25,25)))
+    leafletProxy("map", data = middle_activity) %>%
+      addMarkers(~Longitude, ~Latitude ,
+                 group = "middle_activity"
+                 , options = marker_opt, popup = ~ paste0("<b>",SITE.NAME,"</b>",
+                                                          "<br/>", "Phone: ", Contact.Number,
+                                                          "<br/>", "Address: ", Location.1, 
+                                                          " ",Postcode) ,  
+                 label = ~ SITE.NAME ,
+                 icon = list(iconUrl = 'https://cdn3.iconfinder.com/data/icons/school-pack-3-1/512/5-512.png'
+                             ,iconSize = c(25,25)))
+    leafletProxy("map", data = high_activity) %>%
+      addMarkers(~Longitude, ~Latitude,
+                 group = "high_activity"
+                 , options = marker_opt, popup = ~ paste0("<b>",SITE.NAME,"</b>",
+                                                          "<br/>", "Phone: ", Contact.Number,
+                                                          "<br/>", "Address: ", Location.1, 
+                                                          " ",Postcode) ,  
+                 label = ~ SITE.NAME,
+                 icon = list(iconUrl = 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/50/Closed_Book_Icon.svg/512px-Closed_Book_Icon.svg.png'
+                             ,iconSize = c(25,25)))
+    m
   })
+  
+  #enable/disable markers of specific group
+
+  observeEvent(input$enable_markers, {
+
+    if("Elementary School" %in% input$enable_markers) leafletProxy("map") %>% showGroup("kid_activity")
+    else{leafletProxy("map") %>% hideGroup("kid_activity")}
+    if("Middle School" %in% input$enable_markers) leafletProxy("map") %>% showGroup("middle_activity")
+    else{leafletProxy("map") %>% hideGroup("middle_activity")}
+    if("High School" %in% input$enable_markers) leafletProxy("map") %>% showGroup("high_activity")
+    else{leafletProxy("map") %>% hideGroup("high_activity")}
+  }, ignoreNULL = FALSE)
+  
+## show the crime data around the location along with popups
+
+  observeEvent(input$map_click, {
+    if(!input$click_multi) leafletProxy("map") %>% clearGroup(c("circles","centroids",paste(crime$LAW_CAT_CD, rep(1:24, each = 7))))
+
+    click <- input$map_click
+    clat <- click$lat
+    clong <- click$lng
+    radius <- input$click_radius
+    
+    #output info
+    output$click_coord <- renderText(paste("Latitude:",round(clat,7),", Longitude:",round(clong,7)))
+    ## calculated noise info
+    crimes_within_range <- crimes_within(input$click_radius, clong, clat)
+    
+    ### need weighted avg here
+    crimes_total <- nrow(crimes_within_range)
+    crimes_per_day <- crimes_total / 365
+    crimes_per_day_area <- crimes_total / (radius/1000)^2
+    #danger index
+  
+    output$click_crimes_total <- renderText(crimes_total)
+    output$click_crimes_per_day <- renderText(round(crimes_per_day,2))
+    output$click_crimes_per_day_area <- renderText(round(crimes_per_day_area, 2))
+    
+   leafletProxy('map') %>%
+      addCircles(lng = clong, lat = clat, group = 'circles',
+                 stroke = TRUE, radius = radius,popup = paste("CRIME LEVEL: ", round(crimes_per_day_area,2), sep = ""),
+                 color = '#3333cc', weight = 1,
+                 fillColor = pal(crimes_per_day_area),fillOpacity = 0.5)%>%
+      addCircles(lng = clong, lat = clat, group = 'centroids', radius = 1, weight = 2,
+                 color = 'black',fillColor = 'black',fillOpacity = 1)
+    
+    crimes_within_range <- merge(crimes_within_range,crime,by = c("CMPLNT_NUM","CMPLNT_NUM"), all.y = F)
+
+    leafletProxy('map', data = crimes_within_range) %>%
+      addCircles(~Longitude.x,~Latitude.x, group =~paste(LAW_CAT_CD.x), stroke = F, 
+                 radius = 12, fillOpacity = 0.3,fillColor=~color.x)
+  })
+
   
   ## Statistics Part
   
@@ -33,15 +131,12 @@ shinyServer(function(input, output,session) {
   output$crime_sex <- renderGvis(crime_sex_count)
     
   output$crime_race <- renderGvis(crime_race_count)
->>>>>>> c620f283b3d102cf2371e9ea1fd42b712aa0be0e
+  
   # The activities data display column in the Data Search Column  
   output$table1 <- renderDataTable(activities,
-                                   options = list(pageLength = 10, lengthMenu = list(c(10))))
-  
+                                  options = list(pageLength = 10, lengthMenu = list(c(10))))
   # The crime data display column in the Data Search Column  
   output$table2 <- renderDataTable(crime,
                                    options = list(pageLength = 10, lengthMenu = list(c(10))))
-  
-  
 })
 
