@@ -4,13 +4,14 @@
 
 #Loadinbg the required data:
 
-activities <- read.csv("/Users/lihao/Documents/GitHub/fall2019-proj2--sec2-grp8/app/www/data/activities_processed.csv")
-school <- read.csv("/Users/lihao/Documents/GitHub/fall2019-proj2--sec2-grp8/app/www/data/school.csv")
-crime <- read.csv("/Users/lihao/Documents/GitHub/fall2019-proj2--sec2-grp8/app/www/data/teen_data.csv")
+activities <- read.csv("../www/data/activities_processed.csv")
+school <- read.csv("../www/data/school.csv")
+crime <- read.csv("../www/data/teen_data.csv")
 
 
 
-#Pie chart statistics of crime:
+
+crime#Pie chart statistics of crime:
 library(googleVis)
 library(dplyr)
 library(data.table)
