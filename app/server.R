@@ -6,12 +6,16 @@ library(shinyWidgets)
 library(googleVis)
 library(geosphere)
 library(leaflet.extras)
+library(ggmap)
 
-setwd("/Users/jacob/Desktop/FALL 2019/Applied Data Science/fall2019-proj2--sec2-grp8/data")
+#Get the Google API
+register_google(key = "AIzaSyAXxi_jjBKmoortYOFU1WeenatppEgJgdc")
 
-activities <- read.csv("activities_processed.csv")
+#setwd("/Users/jacob/Desktop/FALL 2019/Applied Data Science/fall2019-proj2--sec2-grp8/data")
 
-crime_data <- read.csv("teen_data.csv")
+#activities <- read.csv("activities_processed.csv")
+
+#crime_data <- read.csv("teen_data.csv")
 
 kid_activity <- activities[activities$Grade.Level...Age.Group == "Elementary",]
 middle_activity <- activities[activities$Grade.Level...Age.Group == "Middle School",]
@@ -19,7 +23,7 @@ high_activity <- activities[activities$Grade.Level...Age.Group == "High School",
 
 marker_opt <- markerOptions(opacity = 0.7, riseOnHover = TRUE)
 
-crimes_within <- function(r,long,lat){return(crime_data[distCosine(c(long,lat),crime_data[,c("Longitude","Latitude")])<=r,])} 
+#crimes_within <- function(r,long,lat){return(crime_data[distCosine(c(long,lat),crime_data[,c("Longitude","Latitude")])<=r,])} 
 ### pallette for circle fill color #6666cc  #3333cc
 pal <- colorNumeric("#666699",c(0,1), na.color = "#808080" )
 shinyServer(function(input, output,session) {
@@ -69,7 +73,7 @@ shinyServer(function(input, output,session) {
   
   #enable/disable markers of specific group
   observeEvent(input$enable_markers, {
-    if("Elementray School" %in% input$enable_markers) leafletProxy("map") %>% showGroup("kid_activity")
+    if("Elementary School" %in% input$enable_markers) leafletProxy("map") %>% showGroup("kid_activity")
     else{leafletProxy("map") %>% hideGroup("kid_activity")}
     if("Middle School" %in% input$enable_markers) leafletProxy("map") %>% showGroup("middle_activity")
     else{leafletProxy("map") %>% hideGroup("middle_activity")}
@@ -77,48 +81,44 @@ shinyServer(function(input, output,session) {
     else{leafletProxy("map") %>% hideGroup("high_activity")}
   }, ignoreNULL = FALSE)
   
-## show the crime data around the location along with popups
+
   observeEvent(input$map_click, {
-    if(!input$click_multi)leafletProxy("map") %>% clearGroup(c("circles","centroids",paste(crime_data$LAW_CAT_CD, rep(1:24, each = 7))))
+    if(!input$click_multi) leafletProxy("map") %>% clearGroup(c("circles","centroids",paste(crime$LAW_CAT_CD, rep(1:24, each = 7))))
     click <- input$map_click
     clat <- click$lat
     clong <- click$lng
     radius <- input$click_radius
-    address <- NULL
-    if(input$click_show_address) address <-  revgeocode(c(clong,clat))
+    
     #output info
     output$click_coord <- renderText(paste("Latitude:",round(clat,7),", Longitude:",round(clong,7)))
-    output$click_address <- renderText(address)
     ## calculated noise info
     crimes_within_range <- crimes_within(input$click_radius, clong, clat)
+    
     ### need weighted avg here
     crimes_total <- nrow(crimes_within_range)
     crimes_per_day <- crimes_total / 365
-    crimes_per_day_area <- crimes_per_day / (radius/100)^2
+    crimes_per_day_area <- crimes_total / (radius/1000)^2
     #danger index
     
     output$click_crimes_total <- renderText(crimes_total)
     output$click_crimes_per_day <- renderText(round(crimes_per_day,2))
     output$click_crimes_per_day_area <- renderText(round(crimes_per_day_area, 2))
-   
-    #circles
+    
     leafletProxy('map') %>%
       addCircles(lng = clong, lat = clat, group = 'circles',
-                 stroke = TRUE, radius = radius, 
-                 popup = paste("CRIME LEVEL: ", round(click_crimes_per_day_area,2), sep = ""),
-                 color = '#3333cc', opcity = 1, weight = 1,
-                 fillColor = pal(click_crimes_per_day_area),fillOpacity = 0.5) %>%
+                 stroke = TRUE, radius = radius,popup = paste("CRIME LEVEL: ", round(crimes_per_day_area,2), sep = ""),
+                 color = '#3333cc', weight = 1,
+                 fillColor = pal(crimes_per_day_area),fillOpacity = 0.5)%>%
       addCircles(lng = clong, lat = clat, group = 'centroids', radius = 1, weight = 2,
-                 color = 'black',opacity = 1,fillColor = 'black',fillOpacity = 1)
-    #draw dots for every single crime within range
-    crimes_within_range <- merge(crimes_within_range,crime_data,by = c("CMPLNT_NUM","CMPLNT_NUM"), all.y = F)
+                 color = 'black',fillColor = 'black',fillOpacity = 1)
+    
+    crimes_within_range <- merge(crimes_within_range,crime,by = c("CMPLNT_NUM","CMPLNT_NUM"), all.y = F)
+
     leafletProxy('map', data = crimes_within_range) %>%
-      addCircles(~Longitude,~Latitude, group = ~ paste(LAW_CAT_CD), stroke = F, 
-                 radius = 12, fillOpacity = 0.3)
+      addCircles(~Longitude.x,~Latitude.x, group =~paste(LAW_CAT_CD.x), stroke = F, 
+                 radius = 12, fillOpacity = 0.3,fillColor=~color.x)
   })
-  
-  
-  
+
   
   ## Statistics Part
   
