@@ -131,6 +131,13 @@ shinyUI(
                                                          div(plotlyOutput("stat_plot_ts2"), align="center")
                                                          #div(img(src="img/stat_time_distribution.png", width=800), align="center")
                                                 ),
+                                                ###########################
+                                                tabPanel(title="Crime Rate By borough by hour",
+                                                         br(),
+                                                         div(plotlyOutput("stat_plot_ts_crime"), align="center")
+                                                         #div(img(src="img/stat_time_distribution.png", width=800), align="center")
+                                                ),
+                                                #########################
                                                 tabPanel(title="tbd",
                                                          br()
                                                          #div(img(src="img/stat_plot_heatmap.png", width="90%"), align="center" )

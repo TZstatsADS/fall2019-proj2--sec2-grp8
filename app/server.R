@@ -127,6 +127,10 @@ pal <- colorNumeric("#666699",c(0,1), na.color = "#808080" )
   output$stat_plot_ts <- renderPlotly(plot1)
   output$stat_plot_ts2 <- renderPlotly(plot2)
   output$crime_type <- renderGvis(crime_type_count)
+  #######################
+  output$stat_plot_ts_crime <- renderPlotly(plot_muliti_crime)
+  ######################
+  
   
   output$crime_sex <- renderGvis(crime_sex_count)
     

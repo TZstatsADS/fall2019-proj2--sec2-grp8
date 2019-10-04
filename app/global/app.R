@@ -7,7 +7,7 @@
 activities <- read.csv("../www/data/activities_processed.csv")
 school <- read.csv("../www/data/school.csv")
 crime <- read.csv("../www/data/teen_data.csv")
-
+crime_hour_boro = read.csv("../../output/crimeweighted_hour_boro.csv")
 
 
 
@@ -15,6 +15,8 @@ crime#Pie chart statistics of crime:
 library(googleVis)
 library(dplyr)
 library(data.table)
+library(tidyverse)
+
 
 
 crime_type <- data.frame(type= c("Felony", "Misdemeanor", "Violation"),amount=c(4096,8992,3353 ))
@@ -92,7 +94,16 @@ plot2 <- plot_ly(data.frame(hour_count_summary), x = hour_count_summary$Hour)%>%
     paper_bgcolor = rgb(1,1,1,0)
   )
 
+#################################################
 
+plot_muliti_crime <-ggplot(crime_hour_boro, aes(hour, crime_weighted, color = boro)) + geom_line() +
+  ggtitle("Crime index") +
+  labs (x = "time", y = "crime_index") +
+  theme_grey(16) +
+  theme(legend.title = element_blank())
+
+
+##################################################
 crimes_within <- function(r,long,lat){return(crime[distCosine(c(long,lat),crime[,c("Longitude","Latitude")])<=r,])} 
 ### pallette for circle fill color #6666cc  #3333cc
 
