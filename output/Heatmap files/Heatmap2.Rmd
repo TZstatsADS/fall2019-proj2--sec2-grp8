@@ -1,0 +1,92 @@
+---
+title: 'Tutorial 2: EDAV using shiny'
+author: "Tom Bat"
+date: "September 18, 2018"
+output:
+  html_document:
+    df_print: paged
+---
+
+This notebook processes a small set of data for a toy shiny app.
+
+## Set gloabl options
+```{r global_options, include=T}
+knitr::opts_chunk$set(fig.width=12, fig.height=8, fig.path='figs/',
+                      echo=T, warning=FALSE, message=FALSE)
+```
+
+## Load the data manipulation libraries
+
+```{r}
+
+
+library(dplyr)
+library(leaflet)
+library(leaflet.extras)
+library(tigris)
+library(geosphere)
+
+
+
+teen_crime<-read.csv(file="../output/teen_data_by_hour.csv")
+teen_activities<-read.csv(file="../output/activities.csv")
+teen_activities_df<-teen_activities
+
+```
+
+
+```{r, message=FALSE, warning=FALSE}
+
+heat_intensity_df<-NULL
+for (hours in 1:24) {
+  teen_crime_hour <- teen_crime[teen_crime$Hour==hours-1,]
+  
+  
+  distan_1 <- function(row_i, teen_crime_hour) {
+    distance1 <-
+      (distm(cbind(row_i[1], row_i[2]), teen_crime_hour[, c("Latitude", "Longitude")], fun = distHaversine)[1, ] / 1609)
+    
+    crime_type <- teen_crime_hour[which(distance1 < 0.5), "LAW_CAT_CD"] %>%
+      table()
+    
+    heat <-
+      ifelse(sum(crime_type) == 0, 0, ((3 * crime_type["FELONY"] + 2 * crime_type["MISDEMEANOR"] +
+                                          1 * crime_type["VIOLATION"]) / sum(crime_type)
+      ))
+    
+    return(heat[[1]])
+  }
+  
+  
+ 
+ 
+  heat_intensity <- NULL
+  for (i in 1:length(teen_activities_df$Latitude)) {
+    heat_intensity[i] <-distan_1(teen_activities_df[i, c("Latitude", "Longitude")], teen_crime_hour)
+      # rbind(heat_intensity, distan_1(teen_activities_df[i, c("Latitude", "Longitude")], teen_crime_hour)* 10 / 3)
+    #heat_intensity<-rbind(heat_intensity,distan_1(row_i))
+    
+  }
+  heat_intensity_df[hours]<-data.frame(heat_intensity)
+}
+#heat_intensity_df[[1]]
+
+heat_intensity_df_hour<-NULL
+
+for (hours in 1:24){
+heat_intensity_df_hour<-cbind(heat_intensity_df_hour,heat_intensity_df[[hours]])
+}
+
+
+dfa<-teen_activities_df%>%
+  select(SITE.NAME,Latitude,Longitude)%>%
+  cbind(heat_intensity_df_hour)
+names(dfa)[4:27]<-0:23
+
+save(dfa, file="../output/dfa.RData")
+
+```
+
+
+#########################
+
