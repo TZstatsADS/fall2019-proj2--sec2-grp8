@@ -17,11 +17,11 @@ The **learning goals** for this project is:
 
 *The above general statement about project 2 can be removed once you are finished with your project. It is optional.
 
-## SafeKid
+## SafeKid(https://adsproject2group8.shinyapps.io/Project/)
 Term: Fall 2019
 
 + Team # Section 2 Group 8
-+ **Projec title**: + Team members
++ **SafeKid**: + Team members
 	+ Batidzirai, Thomson
 	+ Fang, Dingyi 
 	+ Li, Sixuan
