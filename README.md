@@ -17,7 +17,7 @@ The **learning goals** for this project is:
 
 *The above general statement about project 2 can be removed once you are finished with your project. It is optional.
 
-## [SafeKid](https://adsproject2group8.shinyapps.io/Project/)
+## SafeKid
 Term: Fall 2019
 
 + Team # Section 2 Group 8
@@ -27,7 +27,7 @@ Term: Fall 2019
 	+ Li, Sixuan
 	+ Xiao, Lihao
 	+ Yang, Mo
-
++ **Click Me**:[Your Danger Is Avoid From Here](https://adsproject2group8.shinyapps.io/Project/)
 + **Project summary**: Developing an App that relates the crimes related to kids or teenagers with places where children spend the most, for instance, after-school activities spots. Inspired by how the Amber Alarm works, We want to develop visualization and give children warnings of certain areas even before they are in danger.
 + **Contribution statement**: ([default](doc/a_note_on_contributions.md)) All team members contributed equally in all stages of this project. All team members approve our work presented in this GitHub repository including this contributions statement. 
 
