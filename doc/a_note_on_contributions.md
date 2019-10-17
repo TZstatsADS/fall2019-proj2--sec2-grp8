@@ -22,8 +22,10 @@ Dingyi designed the map part server for instance the left panel and the click on
 average participation:
 Mo is invovled in the data processing part and participate in the dweekly iscussion of  the  contents of the project. She also found the crime data sets for the project.
 
+average participation:
 Thomson designed the heatmap of the crimes in the panel. He also proofread some of the sentences in introduction. He also provides ideas of the projects.
 
+average participation:
 Sixuan did the crime index by time in each borough in the statistics part and participate in the discussion in the group chat.
 
 
